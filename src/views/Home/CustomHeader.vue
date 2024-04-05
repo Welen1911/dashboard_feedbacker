@@ -1,5 +1,11 @@
-<script setup>
-
+<script>
+    export default {
+        setup(_,{ emit }) {
+            return {
+                emit
+            };
+        }
+    }
 </script>
 <template>
     <header class="header">
@@ -9,10 +15,14 @@
                     <img src="../../assets/images/logo_feedbacker.png" alt="logo" class="w-full">
                 </div>
                 <div class="flex">
-                    <button class="px-6 py-2 font-bold rounded-full text-white focus:outline-none">
+                    <button
+                    @click="() => emit('createAccount')"
+                    class="px-6 py-2 font-bold rounded-full text-white focus:outline-none">
                         Criar conta
                     </button>
-                    <button class="px-6 py-2 font-bold bg-white rounded-full text-brand-main focus:outline-none">
+                    <button
+                    @click="() => emit('login')"
+                    class="px-6 py-2 font-bold bg-white rounded-full text-brand-main focus:outline-none">
                         Entrar
                     </button>
                 </div>
