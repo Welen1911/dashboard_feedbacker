@@ -1,11 +1,17 @@
 <script setup>
 import { reactive } from 'vue';
 import { useField } from 'vee-validate';
+import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 import useModal from '../../hooks/useModal.js';
 import { validateEmptyAndLength3, validateEmptyAndEmail } from '../../utils/validators.js';
+import services from '../../services';
 
+const router = useRouter();
 const modal = useModal();
+const toast = useToast();
+
 const {
     value: emailValue,
     errorMessage: emailErroMsg
@@ -31,8 +37,43 @@ const state = reactive({
 
 const close = modal.close;
 
-function handleSubmit() {
+async function handleSubmit() {
+    try {
+        toast.clear();
+        state.isLoading = true;
+        const data = await services.auth.login({
+            email: state.email.value,
+            password: state.password.value
+        });
 
+        console.log(data);
+        if (data.status == 200) {
+            window.localStorage.setItem('token', data.token);
+            router.push({ path: "/feedBacks", name: "FeedBacks" });
+            modal.close();
+            return;
+        }
+
+        if (data.status == 404) {
+            toast.error('E-mail não encontrado!');
+        }
+        if (data.status == 401) {
+            toast.error('E-mail não encontrado e senha não encontrado!');
+        }
+        if (data.status == 400) {
+            toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
+
+        } else {
+            toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
+        }
+
+        state.isLoading = false;
+
+    } catch (error) {
+        state.isLoading = false;
+        state.hasErrors = !!error;
+        toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
+    }
 }
 
 </script>
@@ -50,16 +91,10 @@ function handleSubmit() {
                 <span class="text-lg font-medium text-gray-800">
                     E-mail
                 </span>
-                <input 
-                :class="{
+                <input :class="{
                     'border-brand-danger': !!state.email.errorMsg
-                }"
-                class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
-                rounded"
-                placeholder="user@teste.com"
-                v-model="state.email.value"
-                type="email"
-                >
+                }" class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
+                rounded" placeholder="user@teste.com" v-model="state.email.value" type="email">
                 <span v-if="!!state.email.errorMsg" class="block font-medium text-brand-danger">
                     {{ state.email.errorMsg }}
                 </span>
@@ -68,29 +103,18 @@ function handleSubmit() {
                 <span class="text-lg font-medium text-gray-800">
                     Senha
                 </span>
-                <input 
-                :class="{
+                <input :class="{
                     'border-brand-danger': !!state.password.errorMsg
-                }"
-                class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
-                rounded"
-                placeholder="************"
-                v-model="state.password.value"
-                type="password"
-                >
+                }" class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
+                rounded" placeholder="************" v-model="state.password.value" type="password">
                 <span v-if="!!state.password.errorMsg" class="block font-medium text-brand-danger">
                     {{ state.password.errorMsg }}
                 </span>
             </label>
-            <button
-            :disabled="state.isLoading"
-            type="submit"
-            :class="{
+            <button :disabled="state.isLoading" type="submit" :class="{
                 'opacity-50': state.isLoading
-            }"
-            class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
-            bg-brand-main focus:outline-none transition-all duration-150"
-            >
+            }" class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
+            bg-brand-main focus:outline-none transition-all duration-150">
                 Entrar
             </button>
         </form>
