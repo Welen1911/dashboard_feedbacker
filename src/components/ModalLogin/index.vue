@@ -7,6 +7,7 @@ import { useToast } from 'vue-toastification';
 import useModal from '../../hooks/useModal.js';
 import { validateEmptyAndLength3, validateEmptyAndEmail } from '../../utils/validators.js';
 import services from '../../services';
+import Icon from '../Icon/index.vue';
 
 const router = useRouter();
 const modal = useModal();
@@ -115,7 +116,11 @@ async function handleSubmit() {
                 'opacity-50': state.isLoading
             }" class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
             bg-brand-main focus:outline-none transition-all duration-150">
+            <Icon name="loading" class="animate-spin" 
+            v-if="state.isLoading" />
+            <span v-else>
                 Entrar
+            </span>    
             </button>
         </form>
     </div>
