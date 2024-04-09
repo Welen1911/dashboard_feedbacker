@@ -22,3 +22,11 @@ export function validateEmptyAndEmail(value) {
 
   return true;
 }
+
+export function validateEmpty(value) {
+  if (!value) {
+    return "*Este campo é obrigatório!";
+  }
+
+  return true;
+}
