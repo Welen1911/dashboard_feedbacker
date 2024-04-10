@@ -13,6 +13,8 @@ const router = useRouter();
 const modal = useModal();
 const toast = useToast();
 
+const close = modal.close;
+
 const {
     value: nameValue,
     errorMessage: nameErrorMsg
@@ -45,7 +47,19 @@ const state = reactive({
     }
 });
 
-const close = modal.close;
+async function login({ email, password }) {
+    const data = await services.auth.login({
+        email,
+        password
+    });
+
+    if (data.status == 200) {
+        window.localStorage.setItem('token', data.token);
+        router.push({ path: "/feedBacks", name: "FeedBacks" });
+        modal.close();
+        return;
+    }
+}
 
 async function handleSubmit() {
     try {
@@ -60,21 +74,16 @@ async function handleSubmit() {
         console.log(data);
         if (data.status == 201) {
             toast.success('Cadastro realizado com sucesso!');
-            modal.close();
+            login({ email: state.email.value, password: state.password.value });
+            state.isLoading = false;
             return;
         }
 
-        if (data.status == 404) {
-            toast.error('E-mail não encontrado!');
-        }
-        if (data.status == 401) {
-            toast.error('E-mail não encontrado e senha não encontrado!');
-        }
         if (data.status == 400) {
-            toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
+            toast.error('Ocorreu um erro ao criar a conta!');
 
         } else {
-            toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
+            toast.error('Você precisa preencher todos os campos!');
         }
 
         state.isLoading = false;
@@ -137,11 +146,10 @@ async function handleSubmit() {
                 'opacity-50': state.isLoading
             }" class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
             bg-brand-main focus:outline-none transition-all duration-150">
-            <Icon name="loading" class="animate-spin" 
-            v-if="state.isLoading" />
-            <span v-else>
-                Criar conta
-            </span>    
+                <Icon name="loading" class="animate-spin" v-if="state.isLoading" />
+                <span v-else>
+                    Criar conta
+                </span>
             </button>
         </form>
     </div>
