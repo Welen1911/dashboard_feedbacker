@@ -49,7 +49,7 @@ async function handleSubmit() {
 
         console.log(data);
         if (data.status == 200) {
-            window.localStorage.setItem('token', data.token);
+            window.localStorage.setItem('token', data.data.token);
             router.push({ path: "/feedBacks", name: "FeedBacks" });
             modal.close();
             return;
