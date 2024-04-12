@@ -1,7 +1,8 @@
 import axios from "axios";
 import AuthService from "./auth";
 import UsersService from "./users";
-import router from '../router';
+import router from "../router";
+import { setGlobalLoading } from "../store/global";
 
 const API_ENVS = {
   production: "",
@@ -13,21 +14,25 @@ const httpClient = axios.create({
   baseURL: API_ENVS.local,
 });
 
-httpClient.interceptors.request.use(
-  config => {
-    console.log('Entrou aqui!');
-    const token = window.localStorage.getItem('token');
-    if (token) {
-      console.log(token);
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+httpClient.interceptors.request.use((config) => {
+  console.log("Entrou aqui!");
+  
+  setGlobalLoading(true);
 
-    return config;
+  const token = window.localStorage.getItem("token");
+  if (token) {
+    console.log(token);
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+
+  return config;
+});
 
 httpClient.interceptors.response.use(
   (response) => {
+  
+    setGlobalLoading(false);
+  
     return response;
   },
   (error) => {
@@ -35,21 +40,24 @@ httpClient.interceptors.response.use(
 
     const canThrowAnError =
       error.request.status === 0 || error.request.status === 500;
-      
+
     if (canThrowAnError) {
+      setGlobalLoading(false);
+
       throw new Error(error.message);
     }
 
     if (error.response.status === 401) {
       router.push({
-        name: 'Home'
+        name: "Home",
       });
     }
+    setGlobalLoading(false);
     return error.response;
   }
 );
 
 export default {
   auth: AuthService(httpClient),
-  users: UsersService(httpClient)
+  users: UsersService(httpClient),
 };

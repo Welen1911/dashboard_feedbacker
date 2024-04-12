@@ -3,6 +3,7 @@ import { RouterView, useRoute, useRouter } from 'vue-router';
 import ModalFactory from './components/ModalFactory/index.vue';
 import { watch } from 'vue';
 import services from './services';
+import { setCurrentUser } from './store/user';
 
 const router = useRouter();
 const route = useRoute();
@@ -18,6 +19,9 @@ watch(
       }
 
       const {data} = await services.users.getMe();
+
+      setCurrentUser(data);
+
       console.log(data);
     }
   }
