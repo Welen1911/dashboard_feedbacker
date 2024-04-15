@@ -1,5 +1,12 @@
 <script setup>
 import HeaderLogger from '../../components/HeaderLogger/index.vue';
+import Icon from '../../components/Icon/index.vue';
+import useStore from '../../hooks/useStore';
+import palette from '../../../palette';
+
+const store = useStore('User');
+
+const brandColors = palette.brand;
 </script>
 <template>
     <HeaderLogger />
@@ -10,5 +17,29 @@ import HeaderLogger from '../../components/HeaderLogger/index.vue';
         <p class="text-lg text-center text-gray-800 font-regular">
             Guia de instalação e geração de suas credenciais
         </p>
+    </div>
+    <div class="flex justify-center w-full h-full">
+        <div class="flex flex-col w-4/5 max-w-6xl py-10">
+            <h1 class="text-3xl font-black text-brand-darkgray">
+                Instalação e configuração
+            </h1>
+            <p class="mt-10 text-lg text-gray-800 font-regular">
+                Este aqui é a sua chave de api
+            </p>
+            <div v-for="apikey in store.currentUser.apikeys" :key="apikey.id"
+                class="flex py-3 pl-5 mt-2 rounded items-center bg-brand-gray w-2/3">
+                <span>{{ apikey.id }}</span>
+                <div class="flex ml-80 mr-1">
+                    <Icon name="copy" :color="brandColors.graydark" size="24" class="cursor-pointer"></Icon>
+                    <Icon name="loading" :color="brandColors.graydark" size="24" class="cursor-pointer ml-3"></Icon>
+                </div>
+            </div>
+            <p class="mt-5 text-lg text-gray-800 font-regular">
+                Coloque o script abaixo no seu site para começar a receber feedbacks
+            </p>
+            <div v-for="apikey in store.currentUser.apikeys" :key="apikey.id" class="py-3 pl-5 pr-20 mt-2 rounded bg-brand-gray w-2/3 overflow-x-scroll">
+                <pre>&lt;script src="https://Welen1911-feedbacker-widget.netlify.app?apikey={{ apikey.id }}"&gt;&lt;/script&gt;</pre>
+            </div>
+        </div>
     </div>
 </template>
