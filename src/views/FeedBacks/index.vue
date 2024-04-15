@@ -1,5 +1,6 @@
+<script setup>
+import HeaderLogger from '../../components/HeaderLogger/index.vue';
+</script>
 <template>
-    <div>
-        FeedBacks!
-    </div>
+    <HeaderLogger />
 </template>
