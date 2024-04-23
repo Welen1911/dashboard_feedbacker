@@ -1,6 +1,7 @@
 <script setup>
 import HeaderLogger from '../../components/HeaderLogger/index.vue';
 import Filters from './Filters.vue';
+import FiltersLoading from './FiltersLoading.vue';
 </script>
 <template>
     <HeaderLogger />
@@ -10,7 +11,7 @@ import Filters from './Filters.vue';
             Feedbacks
         </h1>
         <p class="text-lg text-center text-gray-800 font-regular">
-            Detalhes de todos os feedbacks recebidos.        
+            Detalhes de todos os feedbacks recebidos.
         </p>
     </div>
     <div class="flex justify-center w-full pb-20">
@@ -21,10 +22,10 @@ import Filters from './Filters.vue';
                 </h1>
                 <suspense>
                     <template #default>
-                        <Filters/>
+                        <Filters class="mt-8 animate__animated animate__fadeIn animate__faster" />
                     </template>
                     <template #fallback>
-                        Loading.....
+                        <FiltersLoading class="mt-8" />
                     </template>
                 </suspense>
             </div>
