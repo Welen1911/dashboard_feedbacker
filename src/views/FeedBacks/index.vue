@@ -1,7 +1,49 @@
 <script setup>
+import { onMounted, reactive } from 'vue';
 import HeaderLogger from '../../components/HeaderLogger/index.vue';
+import FeedbackCard from '../../components/FeedbackCard/index.vue';
+import FeedbackCardLoading from '../../components/FeedbackCard/Loading/index.vue';
 import Filters from './Filters.vue';
 import FiltersLoading from './FiltersLoading.vue';
+import services from '../../services';
+
+const state = reactive({
+    isLoading: false,
+    feedbacks: [],
+    currentFeedbackType: null,
+    pagination: {
+        limit: 5,
+        offset: 0
+    },
+    hasError: false
+});
+
+function handleErrors(error) {
+    state.hasError = !!error;
+}
+
+async function fecthFeedbacks() {
+    try {
+        state.isLoading = true;
+
+        const data = await services.feedbacks.getAll({
+            ...state.pagination,
+            type: state.currentFeedbackType
+        });
+
+        state.feedbacks = data.data;
+        // state.pagination = data.pagination;
+        state.isLoading = false;
+
+    } catch (error) {
+        handleErrors(error);
+    }
+}
+
+onMounted(() => {
+    fecthFeedbacks();
+});
+
 </script>
 <template>
     <HeaderLogger />
@@ -30,7 +72,16 @@ import FiltersLoading from './FiltersLoading.vue';
                 </suspense>
             </div>
             <div class="px-10 pt-20 col-span-3">
-
+                <p v-if="state.hasError" class="text-lg text-center text-gray-800 font-regular">
+                    Aconteceu um erro ao carregar os feedbacks!🥺
+                </p>
+                <p v-if="state.feedbacks.length == 0 && !state.isLoading"
+                    class="text-lg text-center text-gray-800 font-regular">
+                    Ainda nenhum feedback recebido!🥺
+                </p>
+                <FeedbackCardLoading v-if="state.isLoading" />
+                <FeedbackCard v-else v-for="(feedback, index) in state.feedbacks" :key="feedback.id"
+                    :is-opened="index === 0" :feedback="feedback" class="mb-8" />
             </div>
         </div>
     </div>
