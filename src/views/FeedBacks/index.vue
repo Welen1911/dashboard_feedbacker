@@ -9,6 +9,7 @@ import services from '../../services';
 
 const state = reactive({
     isLoading: false,
+    isLoadingFeedbacks: false,
     feedbacks: [],
     currentFeedbackType: null,
     pagination: {
@@ -18,7 +19,30 @@ const state = reactive({
     hasError: false
 });
 
+async function changeFeedbacksType(type) {
+    try {
+        state.isLoadingFeedbacks = true;
+        state.pagination.limit = 5;
+        state.pagination.offset = 0;
+        state.currentFeedbackType = type;
+
+        const data = await services.feedbacks.getAll({
+            type,
+            ...state.pagination
+        });
+
+        state.feedbacks = data.data;
+        // state.pagination = data.pagination;
+        state.isLoadingFeedbacks = false;
+
+    } catch (error) {
+        handleErrors(error);
+    }
+}
+
+
 function handleErrors(error) {
+    state.isLoading = false;
     state.hasError = !!error;
 }
 
@@ -64,7 +88,8 @@ onMounted(() => {
                 </h1>
                 <suspense>
                     <template #default>
-                        <Filters class="mt-8 animate__animated animate__fadeIn animate__faster" />
+                        <Filters @select="changeFeedbacksType"
+                            class="mt-8 animate__animated animate__fadeIn animate__faster" />
                     </template>
                     <template #fallback>
                         <FiltersLoading class="mt-8" />
@@ -79,7 +104,7 @@ onMounted(() => {
                     class="text-lg text-center text-gray-800 font-regular">
                     Ainda nenhum feedback recebido!🥺
                 </p>
-                <FeedbackCardLoading v-if="state.isLoading" />
+                <FeedbackCardLoading v-if="state.isLoading || state.isLoadingFeedbacks" />
                 <FeedbackCard v-else v-for="(feedback, index) in state.feedbacks" :key="feedback.id"
                     :is-opened="index === 0" :feedback="feedback" class="mb-8" />
             </div>
