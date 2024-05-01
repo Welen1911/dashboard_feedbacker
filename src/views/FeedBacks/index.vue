@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, reactive } from 'vue';
+import { onMounted, onUnmounted, reactive } from 'vue';
 import HeaderLogger from '../../components/HeaderLogger/index.vue';
 import FeedbackCard from '../../components/FeedbackCard/index.vue';
 import FeedbackCardLoading from '../../components/FeedbackCard/Loading/index.vue';
@@ -10,6 +10,7 @@ import services from '../../services';
 const state = reactive({
     isLoading: false,
     isLoadingFeedbacks: false,
+    isLoadingMoreFeedbacks: false,
     feedbacks: [],
     currentFeedbackType: null,
     pagination: {
@@ -31,8 +32,8 @@ async function changeFeedbacksType(type) {
             ...state.pagination
         });
 
-        state.feedbacks = data.data;
-        // state.pagination = data.pagination;
+        state.feedbacks = data.data.data;
+        state.pagination = data.data.pagination;
         state.isLoadingFeedbacks = false;
 
     } catch (error) {
@@ -43,6 +44,8 @@ async function changeFeedbacksType(type) {
 
 function handleErrors(error) {
     state.isLoading = false;
+    state.isLoadingFeedbacks = false;
+    state.isLoadingMoreFeedbacks = false;
     state.hasError = !!error;
 }
 
@@ -55,8 +58,11 @@ async function fecthFeedbacks() {
             type: state.currentFeedbackType
         });
 
-        state.feedbacks = data.data;
-        // state.pagination = data.pagination;
+        state.feedbacks = data.data.data;
+
+        state.pagination = data.data.pagination;
+        console.log(state.pagination);
+
         state.isLoading = false;
 
     } catch (error) {
@@ -64,8 +70,46 @@ async function fecthFeedbacks() {
     }
 }
 
+async function handleScroll() {
+    const isBottonOfWindow = Math.ceil(
+        document.documentElement.scrollTop + window.innerHeight
+    ) >= document.documentElement.scrollHeight;
+
+    if (state.isLoading || state.isLoadingMoreFeedbacks) return;
+
+    if (!isBottonOfWindow) return;
+
+    if (state.feedbacks.length >= state.pagination.total) return;
+
+    try {
+        state.isLoadingMoreFeedbacks = true;
+        const data = await services.feedbacks.getAll({
+            ...state.pagination,
+            type: state.currentFeedbackType,
+            offset: (parseInt(state.pagination.offset )+ 5)
+        });
+
+        console.log(data.data.pagination);
+
+        if (data.data.data.length) {
+            state.feedbacks.push(...data.data.data);
+        }
+
+        state.isLoadingMoreFeedbacks = false;
+        state.pagination = data.data.pagination;
+    } catch (error) {
+        state.isLoadingMoreFeedbacks = false;
+        handleErrors(error);
+    }
+}
+
 onMounted(() => {
     fecthFeedbacks();
+    window.addEventListener('scroll', handleScroll, false);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('scroll', handleScroll, false);
 });
 
 </script>
