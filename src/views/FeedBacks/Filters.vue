@@ -59,7 +59,7 @@ export default {
             state.filters = applyFiltersStructure(data.data);
             console.log(state.filters);
         } catch (error) {
-            state.hasError(!!error);
+            state.hasError = !!error;
             state.filters = applyFiltersStructure(stateDefault);
         }
 

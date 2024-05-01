@@ -1,5 +1,5 @@
 <script setup>
-import { onMounted, onUnmounted, reactive } from 'vue';
+import { Suspense, onErrorCaptured, onMounted, onUnmounted, reactive } from 'vue';
 import HeaderLogger from '../../components/HeaderLogger/index.vue';
 import FeedbackCard from '../../components/FeedbackCard/index.vue';
 import FeedbackCardLoading from '../../components/FeedbackCard/Loading/index.vue';
@@ -15,7 +15,8 @@ const state = reactive({
     currentFeedbackType: null,
     pagination: {
         limit: 5,
-        offset: 0
+        offset: 0,
+        total: 0
     },
     hasError: false
 });
@@ -86,7 +87,7 @@ async function handleScroll() {
         const data = await services.feedbacks.getAll({
             ...state.pagination,
             type: state.currentFeedbackType,
-            offset: (parseInt(state.pagination.offset )+ 5)
+            offset: (parseInt(state.pagination.offset) + 5)
         });
 
         console.log(data.data.pagination);
@@ -112,6 +113,8 @@ onUnmounted(() => {
     window.removeEventListener('scroll', handleScroll, false);
 });
 
+onErrorCaptured(handleErrors);
+
 </script>
 <template>
     <HeaderLogger />
@@ -130,7 +133,7 @@ onUnmounted(() => {
                 <h1 class="text-3xl font-black text-brand-darkgray">
                     Listagem
                 </h1>
-                <suspense>
+                <Suspense>
                     <template #default>
                         <Filters @select="changeFeedbacksType"
                             class="mt-8 animate__animated animate__fadeIn animate__faster" />
@@ -138,19 +141,21 @@ onUnmounted(() => {
                     <template #fallback>
                         <FiltersLoading class="mt-8" />
                     </template>
-                </suspense>
+                </Suspense>
             </div>
             <div class="px-10 pt-20 col-span-3">
                 <p v-if="state.hasError" class="text-lg text-center text-gray-800 font-regular">
                     Aconteceu um erro ao carregar os feedbacks!🥺
                 </p>
-                <p v-if="state.feedbacks.length == 0 && !state.isLoading"
+                <p v-if="state.feedbacks.length == 0 && !state.isLoading && !state.isLoadingFeedbacks && !state.isLoadingMoreFeedbacks
+                && !state.hasError"
                     class="text-lg text-center text-gray-800 font-regular">
                     Ainda nenhum feedback recebido!🥺
                 </p>
                 <FeedbackCardLoading v-if="state.isLoading || state.isLoadingFeedbacks" />
                 <FeedbackCard v-else v-for="(feedback, index) in state.feedbacks" :key="feedback.id"
                     :is-opened="index === 0" :feedback="feedback" class="mb-8" />
+                <FeedbackCardLoading v-if="state.isLoadingMoreFeedbacks" />
             </div>
         </div>
     </div>
