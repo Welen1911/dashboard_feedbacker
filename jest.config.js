@@ -1,3 +1,13 @@
-module.exports = {
-  preset: '@vue/cli-plugin-unit-jest/presets/no-babel'
+// module.exports = {
+//   preset: '@vue/cli-plugin-unit-jest/presets/no-babel',
+//   testMatch: [
+//     '**/*.spec.js'
+//   ]
+// }
+
+export default {
+  preset: '@vue/cli-plugin-unit-jest/presets/no-babel',
+  testMatch: [
+    '**/*.spec.js'
+  ]
 }
