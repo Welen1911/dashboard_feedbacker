@@ -9,15 +9,18 @@ export default (httpClient) => ({
 
     let errors = null;
 
-    // if (!reponse.data) {
-    //   errors = {
-    //     status: reponse.request.status,
-    //     statusText: reponse.request.statusText,
-    //   };
-    // }
+    if (!response.data) {
+      errors = {
+        status: response.request.status,
+        statusText: response.request.statusText,
+      };
+    }
     console.log("Com dados!");
 
-    return response;
+    return {
+      data: response.data,
+      errors
+    }
   },
   createUser: async ({ name, email, password }) => {
     const response = await httpClient.post("/auth/register", {
@@ -30,14 +33,17 @@ export default (httpClient) => ({
 
     let errors = null;
 
-    // if (!reponse.data) {
-    //   errors = {
-    //     status: reponse.request.status,
-    //     statusText: reponse.request.statusText,
-    //   };
-    // }
+    if (!response.data) {
+      errors = {
+        status: response.request.status,
+        statusText: response.request.statusText,
+      };
+    }
     console.log("Com dados!");
 
-    return response;
+    return {
+      data: response.data,
+      errors
+    }
   },
 });
