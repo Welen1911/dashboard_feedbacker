@@ -42,29 +42,31 @@ async function handleSubmit() {
     try {
         toast.clear();
         state.isLoading = true;
-        const data = await services.auth.login({
+        const { data, status } = await services.auth.login({
             email: state.email.value,
             password: state.password.value
         });
 
         console.log(data);
-        if (data.status == 200) {
-            window.localStorage.setItem('token', data.data.token);
+        if (status == 200) {
+            window.localStorage.setItem('token', data.token);
             router.push({ path: "/feedBacks", name: "FeedBacks" });
             modal.close();
             return;
         }
 
-        if (data.status == 404) {
+        if (status == 404) {
             toast.error('E-mail não encontrado!');
         }
-        if (data.status == 401) {
+        if (status == 401) {
             toast.error('E-mail não encontrado e senha não encontrado!');
         }
-        if (data.status == 400) {
+        if (status == 400) {
             toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
 
         } else {
+            console.log('AQUIIIIIIII');
+            console.log(status);
             toast.error('Ocorreu um erro, tente novamente daqui a pouco!');
         }
 
@@ -116,11 +118,10 @@ async function handleSubmit() {
                 'opacity-50': state.isLoading
             }" class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
             bg-brand-main focus:outline-none transition-all duration-150">
-            <Icon name="loading" class="animate-spin" 
-            v-if="state.isLoading" />
-            <span v-else>
-                Entrar
-            </span>    
+                <Icon name="loading" class="animate-spin" v-if="state.isLoading" />
+                <span v-else>
+                    Entrar
+                </span>
             </button>
         </form>
     </div>

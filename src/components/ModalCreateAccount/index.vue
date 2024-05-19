@@ -48,13 +48,13 @@ const state = reactive({
 });
 
 async function login({ email, password }) {
-    const data = await services.auth.login({
+    const { data, status } = await services.auth.login({
         email,
         password
     });
 
-    if (data.status == 200) {
-        window.localStorage.setItem('token', data.data.token);
+    if (status == 200) {
+        window.localStorage.setItem('token', data.token);
         router.push({ path: "/feedBacks", name: "FeedBacks" });
         modal.close();
         return;
@@ -65,21 +65,21 @@ async function handleSubmit() {
     try {
         toast.clear();
         state.isLoading = true;
-        const data = await services.auth.createUser({
+        const { data, status } = await services.auth.createUser({
             name: state.name.value,
             email: state.email.value,
             password: state.password.value
         });
 
         console.log(data);
-        if (data.status == 201) {
+        if (status == 201) {
             toast.success('Cadastro realizado com sucesso!');
             login({ email: state.email.value, password: state.password.value });
             state.isLoading = false;
             return;
         }
 
-        if (data.status == 400) {
+        if (status == 400) {
             toast.error('Ocorreu um erro ao criar a conta!');
 
         } else {

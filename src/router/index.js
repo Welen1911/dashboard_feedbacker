@@ -4,7 +4,7 @@ const FeedBacks = () => import("../views/FeedBacks/index.vue");
 const Home = () => import("../views/Home/index.vue");
 const Credencials = () => import("../views/Credencials/index.vue");
 
-const routes = [
+export const routes = [
   {
     path: "/",
     name: "Home",

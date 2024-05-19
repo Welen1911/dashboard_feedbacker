@@ -19,6 +19,7 @@ export default (httpClient) => ({
 
     return {
       data: response.data,
+      status: response.status,
       errors
     }
   },
@@ -43,6 +44,7 @@ export default (httpClient) => ({
 
     return {
       data: response.data,
+      status: response.status,
       errors
     }
   },
