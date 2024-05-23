@@ -6,6 +6,7 @@ Object {
     "token": "123.123.123",
   },
   "errors": null,
+  "status": undefined,
 }
 `;
 

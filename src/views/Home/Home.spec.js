@@ -12,7 +12,7 @@ const router = createRouter({
 describe("<Home />", () => {
   it("should render home correctly", async () => {
     router.push("/");
-    await router.isReady();
+    // await router.isReady();
     const wrapper = shallowMount(Home, {
       global: {
         plugins: [router],
@@ -20,5 +20,9 @@ describe("<Home />", () => {
     });
 
     expect(wrapper.html()).toMatchSnapshot();
+  
+    const footer = wrapper.find('p');
+
+    expect(footer.text()).toContain("FeedBacker© 2024");
   });
 });

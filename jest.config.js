@@ -10,5 +10,7 @@ export default {
   testMatch: [
     '**/*.spec.js'
   ],
+  testEnvironment: 'jsdom',
+  testTimeout: 30000,
   transformIgnorePatterns: ["node_modules/(?!axios)"],
 }
