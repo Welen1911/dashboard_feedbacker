@@ -40,7 +40,7 @@ function handleLogout() {
                     cursor-pointer focus:outline-none">
                         FeedBacks
                     </li>
-                    <li @click="handleLogout" class="px-6 py-2 font-bold bg-white rounded-full cursor-pointer
+                    <li @click="handleLogout" id="logout-button" class="px-6 py-2 font-bold bg-white rounded-full cursor-pointer
                 text-brand-main focus:outline-none">
                         {{ logoutLabel }}
                     </li>
