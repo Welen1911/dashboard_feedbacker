@@ -97,7 +97,7 @@ async function handleSubmit() {
 
 </script>
 <template>
-    <div class="flex justify-between">
+    <div class="flex justify-between" id="modal-create-account">
         <h1 class="text-4xl font-black text-gray-800">Crie uma conta</h1>
 
         <button @click="close" class="text-4xl text-gray-600 focus:outline-none">
