@@ -110,7 +110,9 @@ async function handleSubmit() {
                 <span class="text-lg font-medium text-gray-800">
                     Nome
                 </span>
-                <input :class="{
+                <input 
+                id="name-field"
+                :class="{
                     'border-brand-danger': !!state.name.errorMsg
                 }" class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
                 rounded" placeholder="User da Silva" v-model="state.name.value" type="text">
@@ -122,7 +124,9 @@ async function handleSubmit() {
                 <span class="text-lg font-medium text-gray-800">
                     E-mail
                 </span>
-                <input :class="{
+                <input 
+                id="email-field"
+                :class="{
                     'border-brand-danger': !!state.email.errorMsg
                 }" class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
                 rounded" placeholder="user@teste.com" v-model="state.email.value" type="email">
@@ -134,7 +138,9 @@ async function handleSubmit() {
                 <span class="text-lg font-medium text-gray-800">
                     Senha
                 </span>
-                <input :class="{
+                <input 
+                id="password-field"
+                :class="{
                     'border-brand-danger': !!state.password.errorMsg
                 }" class="block w-full px-4 py-3 mt-1 text-lg bg-gray-100 border-2 border-transparent
                 rounded" placeholder="************" v-model="state.password.value" type="password">
@@ -142,7 +148,9 @@ async function handleSubmit() {
                     {{ state.password.errorMsg }}
                 </span>
             </label>
-            <button :disabled="state.isLoading" type="submit" :class="{
+            <button 
+            id="submit-button"
+            :disabled="state.isLoading" type="submit" :class="{
                 'opacity-50': state.isLoading
             }" class="px-8 py-3 mt-10 text-2xl font-bold text-white rounded-full 
             bg-brand-main focus:outline-none transition-all duration-150">

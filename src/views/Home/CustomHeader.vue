@@ -23,6 +23,7 @@
                     </button>
                     <button
                     @click="() => emit('login')"
+                    id="header-login-button"
                     class="px-6 py-2 font-bold bg-white rounded-full text-brand-main focus:outline-none">
                         Entrar
                     </button>
