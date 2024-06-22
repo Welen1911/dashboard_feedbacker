@@ -18,7 +18,7 @@ const httpClient = axios.create({
 
 httpClient.interceptors.request.use((config) => {
   console.log("Entrou aqui!");
-  
+
   setGlobalLoading(true);
 
   const token = window.localStorage.getItem("token");
@@ -32,14 +32,21 @@ httpClient.interceptors.request.use((config) => {
 
 httpClient.interceptors.response.use(
   (response) => {
-  
     setGlobalLoading(false);
-  
+
     return response;
   },
   (error) => {
-    console.log(error);
+    console.log("error:", error);
 
+    if (error.response.status == 401) {
+      window.localStorage.removeItem('token');
+      router.push({
+        name: "Home",
+      });
+      
+      return;
+    }
     const canThrowAnError =
       error.request.status === 0 || error.request.status === 500;
 
@@ -49,11 +56,6 @@ httpClient.interceptors.response.use(
       throw new Error(error.message);
     }
 
-    if (error.response.status === 401) {
-      router.push({
-        name: "Home",
-      });
-    }
     setGlobalLoading(false);
     return error.response;
   }
