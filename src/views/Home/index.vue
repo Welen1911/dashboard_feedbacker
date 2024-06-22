@@ -37,8 +37,12 @@ onMounted(() => {
 });
 </script>
 <template>
-    <CustomHeader @createAccount="handleCreateAccount" @login="handleLogin" />
-    <Contact />
+    <KeepAlive>
+        <CustomHeader @createAccount="handleCreateAccount" @login="handleLogin" />
+    </KeepAlive>
+    <KeepAlive>
+        <Contact />
+    </KeepAlive>
     <div class="flex justify-center py-10 bg-brand-gray">
         <p class="font-medium text-center text-gray-800">FeedBacker© 2024</p>
     </div>
