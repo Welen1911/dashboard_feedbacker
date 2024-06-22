@@ -7,13 +7,14 @@ import router from "../router";
 import { setGlobalLoading } from "../store/global";
 
 const API_ENVS = {
-  production: "",
+  // production: "https://backendtreinamentovue3-welen1911-welens-projects.vercel.app/",
   development: "",
-  local: "http://localhost:3000",
+  local: " http://localhost:3000",
 };
 
 const httpClient = axios.create({
-  baseURL: API_ENVS.local,
+  // baseURL: API_ENVS[process.env.NODE_ENV] ?? API_ENVS.local,
+  baseURL: API_ENVS.production ?? API_ENVS.local,
 });
 
 httpClient.interceptors.request.use((config) => {

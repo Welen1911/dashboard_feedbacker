@@ -28,13 +28,13 @@ async function changeFeedbacksType(type) {
         state.pagination.offset = 0;
         state.currentFeedbackType = type;
 
-        const data = await services.feedbacks.getAll({
+        const {data} = await services.feedbacks.getAll({
             type,
             ...state.pagination
         });
 
-        state.feedbacks = data.data.data;
-        state.pagination = data.data.pagination;
+        state.feedbacks = data.results;
+        state.pagination = data.pagination;
         state.isLoadingFeedbacks = false;
 
     } catch (error) {
@@ -54,14 +54,14 @@ async function fecthFeedbacks() {
     try {
         state.isLoading = true;
 
-        const data = await services.feedbacks.getAll({
+        const {data} = await services.feedbacks.getAll({
             ...state.pagination,
             type: state.currentFeedbackType
         });
 
-        state.feedbacks = data.data.data;
+        state.feedbacks = data.results;
 
-        state.pagination = data.data.pagination;
+        state.pagination = data.pagination;
         console.log(state.pagination);
 
         state.isLoading = false;
@@ -84,20 +84,20 @@ async function handleScroll() {
 
     try {
         state.isLoadingMoreFeedbacks = true;
-        const data = await services.feedbacks.getAll({
+        const {data} = await services.feedbacks.getAll({
             ...state.pagination,
             type: state.currentFeedbackType,
             offset: (parseInt(state.pagination.offset) + 5)
         });
 
-        console.log(data.data.pagination);
+        console.log(data.pagination);
 
-        if (data.data.data.length) {
-            state.feedbacks.push(...data.data.data);
+        if (data.results.length) {
+            state.feedbacks.push(...data.results);
         }
 
         state.isLoadingMoreFeedbacks = false;
-        state.pagination = data.data.pagination;
+        state.pagination = data.pagination;
     } catch (error) {
         state.isLoadingMoreFeedbacks = false;
         handleErrors(error);

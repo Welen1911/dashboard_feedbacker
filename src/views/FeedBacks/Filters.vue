@@ -54,9 +54,9 @@ export default {
         });
 
         try {
-            const data = await services.feedbacks.getSummary();
+            const {data} = await services.feedbacks.getSummary();
             console.log(data);
-            state.filters = applyFiltersStructure(data.data);
+            state.filters = applyFiltersStructure(data);
             console.log(state.filters);
         } catch (error) {
             state.hasError = !!error;

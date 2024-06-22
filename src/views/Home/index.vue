@@ -8,6 +8,7 @@ import CustomHeader from './CustomHeader.vue';
 import Contact from './Contact.vue';
 import ModalLogin from '../../components/ModalLogin/index.vue';
 import ModalCreateAccount from '../../components/ModalCreateAccount/index.vue';
+import services from '../../services';
 
 const router = useRouter();
 const modal = useModal();
@@ -29,10 +30,16 @@ function handleCreateAccount() {
 
 
 
-onMounted(() => {
+onMounted(async () => {
     const token = window.localStorage.getItem('token');
     if (token) {
-        router.push({ name: "FeedBacks" });
+        try {
+            await services.users.getMe();
+
+            router.push({ name: "FeedBacks" });
+        } catch (e) {
+            window.localStorage.removeItem('token');
+        }
     }
 });
 </script>
