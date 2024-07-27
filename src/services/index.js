@@ -7,13 +7,13 @@ import router from "../router";
 import { setGlobalLoading } from "../store/global";
 
 const API_ENVS = {
-  production: "",
+  production: "https://feed-backer-backend.vercel.app/api/api",
   development: "",
   local: "http://localhost:8000/api",
 };
 
 const httpClient = axios.create({
-  baseURL: API_ENVS.local,
+  baseURL: API_ENVS.production ?? API_ENVS.local,
 });
 
 httpClient.interceptors.request.use((config) => {
