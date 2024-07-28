@@ -11,10 +11,10 @@ const props = defineProps({
 console.log(props.type);
 
 const label = computed(() => {
-    if (props.type === 'ISSUE') {
+    if (props.type === 'issue') {
         return 'problema';
     }
-    if (props.type === 'IDEA') {
+    if (props.type === 'idea') {
         return 'ideia';
     }
     return 'outros';
@@ -22,10 +22,10 @@ const label = computed(() => {
 
 
 const classColor = computed(() => {
-    if (props.type === 'ISSUE') {
+    if (props.type === 'issue') {
         return 'brand-danger';
     }
-    if (props.type === 'IDEA') {
+    if (props.type === 'idea') {
         return 'brand-warning';
     }
     return 'brand-graydark';
