@@ -54,10 +54,11 @@ export default {
         });
 
         try {
-            const data = await services.feedbacks.getSummary();
-            console.log(data);
-            state.filters = applyFiltersStructure(data.data);
-            console.log(state.filters);
+            const { data } = await services.feedbacks.getSummary();
+            console.log("Get summary: ", data);
+
+            state.filters = applyFiltersStructure(data);
+            console.log("Get summary: ", state.filters);
         } catch (error) {
             state.hasError = !!error;
             state.filters = applyFiltersStructure(stateDefault);
