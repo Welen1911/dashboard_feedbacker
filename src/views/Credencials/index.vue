@@ -97,7 +97,7 @@ const brandColors = palette.brand;
             <div v-else class="py-3 pl-5 pr-20 mt-2 rounded bg-brand-gray w-full lg:w-2/3 overflow-x-scroll">
                 <span v-if="state.hasError">Erro ao carregar o script!</span>
                 <pre
-                    v-else>&lt;script src="https://Welen1911-feedbacker-widget.netlify.app?apikey={{ state.apikey.id }}"&gt;&lt;/script&gt;</pre>
+                    v-else>&lt;script defer async onload="init('{{ state.apikey.id }}')" src="https://Welen1911-feedbacker-widget.netlify.app/init.js"&gt;&lt;/script&gt;</pre>
             </div>
         </div>
     </div>
